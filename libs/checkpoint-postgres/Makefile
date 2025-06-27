@@ -4,6 +4,8 @@
 # TESTING AND COVERAGE
 ######################
 
+NO_DOCKER ?= $(shell command -v docker >/dev/null 2>&1 && echo "false" || echo "true")
+
 start-postgres:
 	POSTGRES_VERSION=${POSTGRES_VERSION:-16} docker compose -f tests/compose-postgres.yml up -V --force-recreate --wait || ( \
 		echo "Failed to start PostgreSQL, printing logs..."; \
@@ -17,12 +19,17 @@ stop-postgres:
 POSTGRES_VERSIONS ?= 15 16
 test_pg_version:
 	@echo "Testing PostgreSQL $(POSTGRES_VERSION)"
-	@POSTGRES_VERSION=$(POSTGRES_VERSION) make start-postgres
-	@uv run pytest $(TEST)
-	@EXIT_CODE=$$?; \
-	make stop-postgres; \
-	echo "Finished testing PostgreSQL $(POSTGRES_VERSION); Exit code: $$EXIT_CODE"; \
-	exit $$EXIT_CODE
+	@if [ "$(NO_DOCKER)" = "false" ]; then \
+		POSTGRES_VERSION=$(POSTGRES_VERSION) make start-postgres; \
+		uv run pytest $(TEST); \
+		EXIT_CODE=$$?; \
+		make stop-postgres; \
+		echo "Finished testing PostgreSQL $(POSTGRES_VERSION); Exit code: $$EXIT_CODE"; \
+		exit $$EXIT_CODE; \
+	else \
+		echo "Skipping PostgreSQL tests on Windows (Docker not available)"; \
+		echo "PostgreSQL $(POSTGRES_VERSION) tests skipped"; \
+	fi
 
 test:
 	@for version in $(POSTGRES_VERSIONS); do \
@@ -35,11 +42,15 @@ test:
 
 TEST ?= .
 test_watch:
-	POSTGRES_VERSION=${POSTGRES_VERSION:-16} make start-postgres; \
-	uv run ptw $(TEST); \
-	EXIT_CODE=$$?; \
-	make stop-postgres; \
-	exit $$EXIT_CODE
+	@if [ "$(NO_DOCKER)" = "false" ]; then \
+		POSTGRES_VERSION=${POSTGRES_VERSION:-16} make start-postgres; \
+		uv run ptw $(TEST); \
+		EXIT_CODE=$$?; \
+		make stop-postgres; \
+		exit $$EXIT_CODE; \
+	else \
+		echo "Skipping PostgreSQL test watch on Windows (Docker not available)"; \
+	fi
 
 ######################
 # LINTING AND FORMATTING

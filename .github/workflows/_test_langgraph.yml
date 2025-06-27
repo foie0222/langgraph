@@ -43,15 +43,28 @@ jobs:
         shell: bash
         run: uv sync --frozen --group dev
 
+      - name: Set up PostgreSQL (Ubuntu only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo systemctl start postgresql.service
+          sudo -u postgres createuser --createdb --superuser runner
+          sudo -u postgres psql -c "ALTER USER runner PASSWORD 'password';"
+          createdb test -h localhost -U runner
+
       - name: Run tests (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         shell: bash
         run: make test_parallel
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: runner
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test
 
       - name: Run tests (Windows)
         if: matrix.os == 'windows-2025'
         shell: bash
-        run: make test_parallel
+        run: NO_DOCKER=true make test_parallel
 
       - name: Ensure the tests did not create any additional files
         shell: bash

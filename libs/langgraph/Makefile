@@ -38,10 +38,10 @@ coverage:
 		--cov-report term-missing:skip-covered
 
 start-postgres:
-	@echo "Skipping PostgreSQL setup for CI"
+	docker compose -f tests/compose-postgres.yml up -V --force-recreate --wait --remove-orphans
 
 stop-postgres:
-	@echo "Skipping PostgreSQL cleanup for CI"
+	docker compose -f tests/compose-postgres.yml down -v
 
 start-dev-server:
 	LOG_LEVEL=warning uv run langgraph dev --config tests/example_app/langgraph.json --no-browser & echo "$$!" > .devserver.pid
@@ -74,13 +74,19 @@ test:
 	fi
 
 test_parallel:
-	make start-postgres &&\
-	make start-dev-server &&\
-	uv run pytest -n auto --dist worksteal $(TEST); \
-	EXIT_CODE=$$?; \
-	make stop-postgres; \
-	make stop-dev-server; \
-	exit $$EXIT_CODE
+	if [ "$(NO_DOCKER)" = "false" ]; then \
+		make start-postgres &&\
+		make start-dev-server &&\
+		uv run pytest -n auto --dist worksteal $(TEST); \
+		EXIT_CODE=$$?; \
+		make stop-postgres; \
+		make stop-dev-server; \
+		exit $$EXIT_CODE; \
+	else \
+		NO_DOCKER=true uv run pytest -n auto --dist worksteal $(TEST) ; \
+		EXIT_CODE=$$?; \
+		exit $$EXIT_CODE; \
+	fi
 
 integration_tests:
 	uv run pytest integration_tests

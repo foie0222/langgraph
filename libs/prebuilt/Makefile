@@ -14,18 +14,31 @@ stop-postgres:
 	docker compose -f tests/compose-postgres.yml down -v
 
 TEST ?= .
+NO_DOCKER ?= $(sh command -v docker >/dev/null 2>&1 && echo "false" || echo "true")
 
 test:
-	make start-postgres && uv run pytest $(TEST); \
-	EXIT_CODE=$$?; \
-	make stop-postgres; \
-	exit $$EXIT_CODE
+	if [ "$(NO_DOCKER)" = "false" ]; then \
+		make start-postgres && uv run pytest $(TEST); \
+		EXIT_CODE=$$?; \
+		make stop-postgres; \
+		exit $$EXIT_CODE
+	else \
+		NO_DOCKER=true uv run pytest $(TEST) ; \
+		EXIT_CODE=$$?; \
+		exit $$EXIT_CODE; \
+	fi
 
 test_watch:
-	make start-postgres && uv run ptw $(TEST); \
-	EXIT_CODE=$$?; \
-	make stop-postgres; \
-	exit $$EXIT_CODE
+	if [ "$(NO_DOCKER)" = "false" ]; then \
+		make start-postgres && uv run ptw $(TEST); \
+		EXIT_CODE=$$?; \
+		make stop-postgres; \
+		exit $$EXIT_CODE
+	else \
+		NO_DOCKER=true uv run uv run ptw $(TEST) ; \
+		EXIT_CODE=$$?; \
+		exit $$EXIT_CODE; \
+	fi
 
 ######################
 # LINTING AND FORMATTING

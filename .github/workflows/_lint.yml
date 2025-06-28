@@ -59,6 +59,7 @@ jobs:
           key: mypy-lint-${{ runner.os }}-${{ runner.arch }}-py${{ matrix.python-version }}-${{ inputs.working-directory }}-${{ hashFiles(format('{0}/uv.lock', inputs.working-directory)) }}
 
       - name: Analysing package code with our lint
+        shell: bash
         if: steps.changed-files.outputs.all
         working-directory: ${{ inputs.working-directory }}
         run: |

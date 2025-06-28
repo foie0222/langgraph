@@ -24,6 +24,8 @@ jobs:
       sdk-js: ${{ steps.filter.outputs.sdk-js }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # for forked repository
       - uses: dorny/paths-filter@v3
         id: filter
         with:

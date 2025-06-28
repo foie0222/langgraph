@@ -14,7 +14,7 @@ stop-postgres:
 	docker compose -f tests/compose-postgres.yml down -v
 
 TEST ?= .
-NO_DOCKER ?= $(sh command -v docker >/dev/null 2>&1 && echo "false" || echo "true")
+NO_DOCKER ?= $(shell command -v docker >/dev/null 2>&1 && echo false || echo true)
 
 test:
 	if [ "$(NO_DOCKER)" = "false" ]; then \

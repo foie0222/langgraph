@@ -31,15 +31,19 @@ jobs:
         with:
           filters: |
             python:
-              - 'libs/langgraph/**'
-              - 'libs/sdk-py/**'
-              - 'libs/cli/**'
-              - 'libs/checkpoint/**'
-              - 'libs/checkpoint-sqlite/**'
-              - 'libs/checkpoint-postgres/**'
               - 'libs/prebuilt/**'
-            sdk-js:
-              - 'libs/sdk-js/**'
+        # with:
+        #   filters: |
+        #     python:
+        #       - 'libs/langgraph/**'
+        #       - 'libs/sdk-py/**'
+        #       - 'libs/cli/**'
+        #       - 'libs/checkpoint/**'
+        #       - 'libs/checkpoint-sqlite/**'
+        #       - 'libs/checkpoint-postgres/**'
+        #       - 'libs/prebuilt/**'
+        #     sdk-js:
+        #       - 'libs/sdk-js/**'
 
   lint:
     needs: changes

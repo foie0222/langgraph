@@ -66,6 +66,7 @@ jobs:
   test:
     needs: changes
     name: cd ${{ matrix.working-directory }}
+    shell: bash
     strategy:
       matrix:
         working-directory:

@@ -21,9 +21,9 @@ test:
 		make start-postgres && uv run pytest $(TEST); \
 		EXIT_CODE=$$?; \
 		make stop-postgres; \
-		exit $$EXIT_CODE
+		exit $$EXIT_CODE; \
 	else \
-		NO_DOCKER=true uv run pytest $(TEST) ; \
+		NO_DOCKER=true uv run pytest $(TEST); \
 		EXIT_CODE=$$?; \
 		exit $$EXIT_CODE; \
 	fi
@@ -33,9 +33,9 @@ test_watch:
 		make start-postgres && uv run ptw $(TEST); \
 		EXIT_CODE=$$?; \
 		make stop-postgres; \
-		exit $$EXIT_CODE
+		exit $$EXIT_CODE; \
 	else \
-		NO_DOCKER=true uv run uv run ptw $(TEST) ; \
+		NO_DOCKER=true uv run uv run ptw $(TEST); \
 		EXIT_CODE=$$?; \
 		exit $$EXIT_CODE; \
 	fi

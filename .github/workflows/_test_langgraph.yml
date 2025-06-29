@@ -35,6 +35,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_RO_TOKEN }}
 
+      - name: Debug - Check files
+        run: |
+          pwd
+          ls -la
+          cat pyproject.toml | grep -A 10 "dependency-groups"
+
       - name: Install dependencies(Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: uv sync --frozen --group dev --group bench

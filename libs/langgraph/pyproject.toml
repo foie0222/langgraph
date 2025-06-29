@@ -24,6 +24,11 @@ dependencies = [
 Repository = "https://www.github.com/langchain-ai/langgraph"
 
 [dependency-groups]
+bench = [
+    "uvloop==0.21.0b1",
+    "pyperf",
+    "py-spy",
+]
 dev = [
     "pytest",
     "pytest-cov",
@@ -46,11 +51,6 @@ dev = [
     "types-requests",
     "pycryptodome",
     "langgraph-cli[inmem]",
-]
-bench = [
-    "uvloop==0.21.0b1",
-    "pyperf",
-    "py-spy",
 ]
 
 [tool.uv]

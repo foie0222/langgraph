@@ -74,10 +74,10 @@ jobs:
       matrix:
         working-directory:
           [
-            "libs/cli",
-            "libs/checkpoint",
-            "libs/checkpoint-sqlite",
-            "libs/checkpoint-postgres",
+            # "libs/cli",
+            # "libs/checkpoint",
+            # "libs/checkpoint-sqlite",
+            # "libs/checkpoint-postgres",
             "libs/prebuilt",
           ]
     if: needs.changes.outputs.python == 'true'

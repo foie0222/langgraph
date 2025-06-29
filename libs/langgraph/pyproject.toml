@@ -47,7 +47,6 @@ dev = [
     "pycryptodome",
     "langgraph-cli[inmem]",
 ]
-
 bench = [
     "uvloop==0.21.0b1",
     "pyperf",

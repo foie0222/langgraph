@@ -35,6 +35,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_RO_TOKEN }}
 
+      - name: Install dependencies(Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: uv sync --frozen --group dev --group bench
+      
+      - name: Install dependencies(Windows)
+        if: matrix.os == 'ubuntu-latest'
+        run: uv sync --frozen --group dev
+      
       - name: Install dependencies
         if: matrix.os == 'ubuntu-latest'
         run: uv sync --frozen --group dev

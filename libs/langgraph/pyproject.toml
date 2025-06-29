@@ -43,12 +43,15 @@ dev = [
     "langgraph-checkpoint-postgres",
     "langgraph-sdk",
     "psycopg[binary]",
-    "uvloop==0.21.0b1; platform_system != 'Windows'",
-    "pyperf",
-    "py-spy",
     "types-requests",
     "pycryptodome",
     "langgraph-cli[inmem]",
+]
+
+bench = [
+    "uvloop==0.21.0b1",
+    "pyperf",
+    "py-spy",
 ]
 
 [tool.uv]

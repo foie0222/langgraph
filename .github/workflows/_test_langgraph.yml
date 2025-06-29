@@ -5,20 +5,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python-version:
-          - "3.9"
-          - "3.10"
-          - "3.11"
-          - "3.12"
+          # - "3.9"
+          # - "3.10"
+          # - "3.11"
+          # - "3.12"
           - "3.13"
 
     defaults:
       run:
         working-directory: libs/langgraph
-    name: "test #${{ matrix.python-version }}"
+    name: "test ${{ matrix.os }} #${{ matrix.python-version }}"
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}

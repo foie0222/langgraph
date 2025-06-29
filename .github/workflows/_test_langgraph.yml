@@ -35,17 +35,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_RO_TOKEN }}
 
-      - name: Install dependencies (Ubuntu)
+      - name: Install dependencies
         if: matrix.os == 'ubuntu-latest'
         run: uv sync --frozen --group dev
 
-      - name: Install dependencies (Windows)
-        if: matrix.os == 'windows-latest'
-        run: uv sync --frozen --group dev --exclude uvloop
-
       - name: Run tests
         shell: bash
-        run: make test_parallel
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            make test_no_bench
+          else
+            make test_parallel
+          fi
 
       - name: Ensure the tests did not create any additional files
         shell: bash

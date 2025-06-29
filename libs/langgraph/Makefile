@@ -73,6 +73,18 @@ test:
 		exit $$EXIT_CODE; \
 	fi
 
+test_no_bench:
+	if [ "$(NO_DOCKER)" = "false" ]; then \
+			make start-postgres && uv run pytest $(TEST) --ignore=bench; \
+			EXIT_CODE=$$?; \
+			make stop-postgres; \
+			exit $$EXIT_CODE; \
+	else \
+			NO_DOCKER=true uv run pytest $(TEST) --ignore=bench; \
+			EXIT_CODE=$$?; \
+			exit $$EXIT_CODE; \
+	fi
+
 test_parallel:
 	make start-postgres &&\
 	make start-dev-server &&\
